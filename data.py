@@ -33,4 +33,3 @@ with open('actions.txt', 'r') as data:
             price=int(current_action[1]),
             money_return_rate=int(current_action[2])
         )
-print(actions)
