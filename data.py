@@ -1,5 +1,6 @@
 import pandas as pd
 
+import calc
 
 actions = {
     'name': [],
@@ -33,3 +34,14 @@ with open('actions.txt', 'r') as data:
             price=int(current_action[1]),
             money_return_rate=int(current_action[2])
         )
+
+
+def display_actions_list(action_list: pd.DataFrame) -> None:
+    print(action_list)
+    print(pd.DataFrame({
+        'Efficiency': [calc.action_list_efficiency(action_list)],
+        'Invest': [action_list['price'].sum()],
+        'Profit': [calc.action_list_profit(action_list)],
+        'Balance': [calc.action_list_balance(action_list)]
+
+    }))
