@@ -1,6 +1,13 @@
+import pandas as pd
+
 import calc
 
-import pandas as pd
+
+def get_best_invest_action_list(actions_list: pd.DataFrame, max_invest_price: float = 500) -> pd.DataFrame:
+    return max(
+        building_invest_actions_list(pd.DataFrame({'price': []}), actions_list, max_invest_price),
+        key=calc.action_list_balance
+    )
 
 
 def building_invest_actions_list(actions_list: pd.DataFrame, unused_actions_list: pd.DataFrame,
@@ -8,7 +15,7 @@ def building_invest_actions_list(actions_list: pd.DataFrame, unused_actions_list
     try:
         next_min = actions_list['price'].sum() + min(unused_actions_list.iloc, key=lambda x: x['price'])['price']
     except ValueError:
-        return [actions_list]
+        next_min = max_invest_price + 1
     if actions_list['price'].sum() == max_invest_price:
         return [actions_list]
     elif next_min > max_invest_price:
@@ -44,10 +51,18 @@ def building_invest_actions_list(actions_list: pd.DataFrame, unused_actions_list
             )
 
 
-def get_best_invest_action_list(actions_list: pd.DataFrame, max_invest_price: float = 500) -> pd.DataFrame:
-    invest_actions_list = building_invest_actions_list(
-        pd.DataFrame({'price': []}),
-        actions_list,
-        max_invest_price
-    )
-    return max(invest_actions_list, key=calc.action_list_balance)
+def test_opti_two(actions_list: pd.DataFrame, max_invest_price: float = 500):
+    """
+    only test function
+    :param actions_list:
+    :param max_invest_price:
+    :return:
+    """
+    unused_actions_list = actions_list.copy()
+    invest_action_list = pd.DataFrame({'price': []})
+    unused_actions_list = calc.calc_profits(unused_actions_list).sort_values(by=['profits'])
+    invest_action_lists = []
+    while invest_action_list['price'].sum() < max_invest_price:
+        action = unused_actions_list.iloc[0]
+        if invest_action_list['price'].sum() + action['price'] == max_invest_price:
+            invest_action_lists.append(invest_action_list)
