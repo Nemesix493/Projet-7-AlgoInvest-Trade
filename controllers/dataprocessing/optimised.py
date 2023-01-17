@@ -17,7 +17,6 @@ class Optimised(BestActionsListInterface):
         :return:
         """
         to_use_actions_list = actions_list.sort_values(by=['efficiency'], ascending=False)
-        print(to_use_actions_list['price'].sum())
         for action in to_use_actions_list.iloc:
             if action['price'] > invest_max:
                 to_use_actions_list = to_use_actions_list.drop(index=action.name)
@@ -31,7 +30,6 @@ class Optimised(BestActionsListInterface):
         number_actions -= 1
         invest_action_lists = [to_use_actions_list.head(number_actions)]
         length_limit = number_actions * math.log(math.factorial(number_actions))
-        print(length_limit)
         head = number_actions
         tail = length - number_actions - 1
         while len(invest_action_lists) < length_limit and head > 1:

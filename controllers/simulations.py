@@ -6,8 +6,8 @@ import pandas as pd
 import views
 from .checkers import check_menu, check_form
 from .dataprocessing.inoutdata import DataLoader
-from .dataprocessing.calc import actions_list_report
-from .dataprocessing import Bruteforce, OptimisedBruteforce, Optimised, BestActionsListInterface
+from .dataprocessing.calc import actions_list_report, clean_data_frame
+from .dataprocessing import Bruteforce, OptimisedBruteforce, Optimised
 
 
 class Simulations(DataLoader):
@@ -90,10 +90,7 @@ class Simulations(DataLoader):
     def run(cls, view: views.ViewsInterface):
         max_invest = 500
         algorithm = cls.get_algorithm(view=view)
-        data = cls.load_data(view=view)
-        view.display_data_frame(
-            data_frame=data.sort_values(by=['efficiency'], ascending=False).head()
-        )
+        data = clean_data_frame(cls.load_data(view=view))
         actions_list = algorithm[1].get_best_actions_list(
             actions_list=data,
             invest_max=max_invest
